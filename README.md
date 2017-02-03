@@ -48,8 +48,12 @@ Date: Jan 29, 2017
 * Usage of ``PIL``/``Pillow`` and ``pytesseract``
 * PyCharm IDE
 
+## DES (Data Encryption Standard)
+Date: Feb 3, 2017
 
-
+* ``__`` and ``_`` Prefix in Class
+* ``lambda`` and ``map``
+* ``bytes`` in Python3 
 
 
 
