@@ -55,5 +55,11 @@ Date: Feb 3, 2017
 * ``lambda`` and ``map``
 * ``bytes`` in Python3 
 
+## NetEase Music Tool
+Date: Feb 5, 2017
 
+* Use ``curses`` Package to Write Terminal App
+* ``os.fork``
+* UI design of Terminal App
 
+![](./Netease_Music/snampshot.gif)

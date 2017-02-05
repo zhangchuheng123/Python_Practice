@@ -7,6 +7,7 @@ import os
 import json
 import base64
 import time
+import hashlib
 
 from builtins import chr
 
@@ -79,6 +80,10 @@ class NetEase(object):
         rs = pow(int(binascii.hexlify(text), 16),
                  int(pub_key, 16), int(modulus, 16))
         return format(rs, 'x').zfill(256)
+
+    @staticmethod
+    def md5_password(raw_password):
+        return hashlib.md5(raw_password.encode('utf-8')).hexdigest()
 
     def encrypted_request(self, text):
         text = json.dumps(text)
@@ -159,7 +164,7 @@ class NetEase(object):
         except requests.RequestException:
             return {'error': 'daily_signin'}
 
-    def search(self, s, stype=1, offset=0, total='true', limit=60):
+    def search(self, s, stype=1, offset=0, total='true', limit=100):
         # stype: 单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002)
         action = 'http://music.163.com/api/search/get'
         data = {
@@ -199,10 +204,44 @@ class NetEase(object):
 
     @staticmethod
     def get_info(data, data_type='search_songs', info_type='single_song', id=None):
+        """
+        extract specific type of information from specific type of data
+        it is NOT used anymore...
+
+        songs:
+            search_songs -> all kinds of info
+            search_songs -> single_song (id)
+            single_song -> music_id
+
+            single_song_detail -> mp3_url
+
+        users:
+            search_users -> single_user (id)
+            single_user -> user_id
+
+        playlists:
+            user_playlists -> single_playlist (id)
+            single_playlist -> playlist_id
+
+            playlist_detail -> mp3_url  (id=None or id)
+
+        :param data: data itself
+        :param data_type: input data type
+        :param info_type: output data type
+        :param id: optinal, returned data sequence number
+        :return: output data
+        """
         try:
             if (data_type == 'search_songs') & (info_type == 'single_song'):
                 if (data['code'] == 200) & ('songCount' in data['result']):
                     return data['result']['songs'][id]
+            elif data_type == 'search_songs':
+                if (data['code'] == 200) & ('songCount' in data['result']):
+                    song_count = len(data['result']['songs'])
+                    if id is not None:
+                        return [data['result']['songs'][id][info_type]]
+                    else:
+                        return [data['result']['songs'][i][info_type] for i in range(0, song_count)]
             elif (data_type == 'single_song') & (info_type == 'music_id'):
                 return data['id']
             elif (data_type == 'single_song_detail') & (info_type == 'mp3_url'):
@@ -212,7 +251,7 @@ class NetEase(object):
                     return data['result']['userprofiles'][id]
             elif (data_type == 'single_user') & (info_type == 'user_id'):
                 return data['userId']
-            elif (data_type == 'user_playlist') & (info_type == 'single_playlist'):
+            elif (data_type == 'user_playlists') & (info_type == 'single_playlist'):
                 if len(data) != 0:
                     return data[id]
             elif (data_type == 'single_playlist') & (info_type == 'playlist_id'):
