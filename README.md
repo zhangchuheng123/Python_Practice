@@ -62,8 +62,6 @@ Date: Feb 5, 2017
 * ``os.fork``
 * UI design of Terminal App
 
-![](./Netease_Music/snampshot.gif)
-
 ## IRLS for Logistic Regression
 Date: Mar 20, 2017
 
