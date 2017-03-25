@@ -63,3 +63,9 @@ Date: Feb 5, 2017
 * UI design of Terminal App
 
 ![](./Netease_Music/snampshot.gif)
+
+## IRLS for Logistic Regression
+Date: Mar 20, 2017
+
+* Solve Binary Classification Problem $$P(y=1|x) = \dfrac{1}{1 + \exp(-w^T x)}$$
+* Use Iterative Reweighted Least Squares (IRLS) Method $$w_{t+1} = w_t - (X R X^T)^{-1} X (\mu-y)$$, $$R = \mu \circ (1-\mu)$$
